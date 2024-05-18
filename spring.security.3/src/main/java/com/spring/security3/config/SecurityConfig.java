@@ -37,10 +37,12 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.csrf(csrf -> csrf.disable())
+            // without the below line couldn't load the UI in `h2-console`.
+            .headers(headers -> headers.frameOptions(options -> options.disable()))
             .authorizeHttpRequests(auth ->
                     auth.requestMatchers("/products/welcome").permitAll()
-                            .requestMatchers("/products/**")
-                            .authenticated()
+                            .requestMatchers("/products/**").authenticated()
+                            .requestMatchers("/h2-console/**").permitAll()
             )
             .httpBasic(Customizer.withDefaults()).build();
   }
