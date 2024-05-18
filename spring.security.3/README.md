@@ -68,8 +68,3 @@ In Authentication step we created 2 users and only those users are able to authe
 
   // To use `@PreAuthorized()` we need `@EnableMethodSecurity` in the config class.
 ```
-
-
-
-
-
