@@ -1,6 +1,6 @@
 package com.spring.security3.service;
 
-import com.spring.security3.dto.Product;
+import com.spring.security3.entity.Product;
 import com.spring.security3.entity.UserInfo;
 import com.spring.security3.repository.UserInfoRepository;
 import jakarta.annotation.PostConstruct;

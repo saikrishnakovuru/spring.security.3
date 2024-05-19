@@ -1,6 +1,6 @@
 package com.spring.security3.controller;
 
-import com.spring.security3.dto.Product;
+import com.spring.security3.entity.Product;
 import com.spring.security3.entity.UserInfo;
 import com.spring.security3.service.ProductService;
 import org.springframework.security.access.prepost.PreAuthorize;
