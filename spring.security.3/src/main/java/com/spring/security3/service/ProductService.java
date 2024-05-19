@@ -1,7 +1,11 @@
 package com.spring.security3.service;
 
 import com.spring.security3.dto.Product;
+import com.spring.security3.entity.UserInfo;
+import com.spring.security3.repository.UserInfoRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +17,11 @@ import java.util.stream.IntStream;
 public class ProductService {
 
   List<Product> productList = null;
+
+  @Autowired
+  private UserInfoRepository repository;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   @PostConstruct
   public void loadProductsFromDB() {
@@ -38,9 +47,9 @@ public class ProductService {
   }
 
 
-//  public String addUser(UserInfo userInfo) {
-//    userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
-//    repository.save(userInfo);
-//    return "user added to system ";
-//  }
+  public String addNewUser(UserInfo userInfo) {
+    userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+    repository.save(userInfo);
+    return "user added to system ";
+  }
 }

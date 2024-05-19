@@ -1,7 +1,10 @@
 package com.spring.security3.config;
 
+import com.spring.security3.service.UserDetailsFromRepositoryService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,18 +23,19 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
   @Bean
-  public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-    UserDetails admin = User.withUsername("sai")
-            .password(passwordEncoder.encode("sai"))
-            .roles("ADMIN")
-            .build();
-
-    UserDetails user = User.withUsername("uj")
-            .password(passwordEncoder.encode("uj"))
-            .roles("USER")
-            .build();
-
-    return new InMemoryUserDetailsManager(admin, user);
+  public UserDetailsService userDetailsService() {
+//    UserDetails admin = User.withUsername("sai")
+//            .password(passwordEncoder.encode("sai"))
+//            .roles("ADMIN")
+//            .build();
+//
+//    UserDetails user = User.withUsername("uj")
+//            .password(passwordEncoder.encode("uj"))
+//            .roles("USER")
+//            .build();
+//
+//    return new InMemoryUserDetailsManager(admin, user);
+    return new UserDetailsFromRepositoryService();
   }
 
   @Bean
@@ -40,9 +44,8 @@ public class SecurityConfig {
             // without the below line couldn't load the UI in `h2-console`.
             .headers(headers -> headers.frameOptions(options -> options.disable()))
             .authorizeHttpRequests(auth ->
-                    auth.requestMatchers("/products/welcome").permitAll()
+                    auth.requestMatchers("/products/welcome", "/products/new", "/h2-console/**").permitAll()
                             .requestMatchers("/products/**").authenticated()
-                            .requestMatchers("/h2-console/**").permitAll()
             )
             .httpBasic(Customizer.withDefaults()).build();
   }
@@ -50,5 +53,13 @@ public class SecurityConfig {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public AuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    provider.setUserDetailsService(userDetailsService());
+    provider.setPasswordEncoder(passwordEncoder());
+    return provider;
   }
 }

@@ -1,12 +1,10 @@
 package com.spring.security3.controller;
 
 import com.spring.security3.dto.Product;
+import com.spring.security3.entity.UserInfo;
 import com.spring.security3.service.ProductService;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,5 +34,10 @@ public class ProductController {
   @PreAuthorize("hasAuthority('ROLE_USER')")
   public Product getProductById(@PathVariable int id) {
     return service.getProduct(id);
+  }
+
+  @PostMapping("/new")
+  public String addNewUser(@RequestBody UserInfo userInfo) {
+    return service.addNewUser(userInfo);
   }
 }
