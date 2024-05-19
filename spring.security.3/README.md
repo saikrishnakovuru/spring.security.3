@@ -71,4 +71,36 @@ In Authentication step we created 2 users and only those users are able to authe
 
 ## UserInfo
 
-We are using hardcoded users and let's replace those and use an in-memory DB to fetch them.   
+We are using hardcoded users in the authentication part now, let's replace those and use an in-memory DB to fetch them.
+
+```java
+@Bean
+  public UserDetailsService userDetailsService() {
+    return new UserDetailsFromRepositoryService();
+  }
+```
+In the above step we removed the whole hardcoded UserDetails and fetching from the service itself.
+
+Let's see how UserDetailsFromRepositoryService looks like.
+```java
+@Component
+public class UserDetailsFromRepositoryService implements UserDetailsService {
+
+  @Autowired
+  private UserInfoRepository userInfoRepository;
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+    Optional<UserInfo> userInfo = userInfoRepository.findByName(username);
+
+    return userInfo.map(detail -> new ConvertUserInfoToUserDetails(detail))
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+  }
+}
+```
+
+The reason we are implementing `UserDetailsService` is, the authentication bean created accepts only of type `UserDetailsService`.
+
+Fetched userInfo from the repo must be converted to `UserDetails`. Take a look at `ConvertUserInfoToUserDetails` class 
+for the way we converted UserInfo fetched from db to UserDetails.
