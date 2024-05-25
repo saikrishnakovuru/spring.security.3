@@ -22,7 +22,7 @@ public class UserDetailsFromRepositoryService implements UserDetailsService {
 
     Optional<UserInfo> userInfo = userInfoRepository.findByName(username);
 
-    return userInfo.map(detail -> new ConvertUserInfoToUserDetails(detail))
+    return userInfo.map(ConvertUserInfoToUserDetails::new)
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
 }
