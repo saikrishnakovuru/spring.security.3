@@ -1,4 +1,4 @@
-package com.spring.security3.entity;
+package com.spring.security3.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package com.spring.security3.service;
 
-import com.spring.security3.entity.Product;
+import com.spring.security3.dto.Product;
 import com.spring.security3.entity.UserInfo;
 import com.spring.security3.repository.UserInfoRepository;
 import jakarta.annotation.PostConstruct;
@@ -20,6 +20,7 @@ public class ProductService {
 
   @Autowired
   private UserInfoRepository repository;
+
   @Autowired
   private PasswordEncoder passwordEncoder;
 
@@ -47,7 +48,7 @@ public class ProductService {
   }
 
 
-  public String addNewUser(UserInfo userInfo) {
+  public String addUser(UserInfo userInfo) {
     userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
     repository.save(userInfo);
     return "user added to system ";

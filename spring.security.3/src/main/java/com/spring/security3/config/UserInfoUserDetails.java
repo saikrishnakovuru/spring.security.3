@@ -4,22 +4,24 @@ import com.spring.security3.entity.UserInfo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ConvertUserInfoToUserDetails implements UserDetails {
+public class UserInfoUserDetails implements UserDetails {
+
 
   private String name;
   private String password;
   private List<GrantedAuthority> authorities;
 
-  public ConvertUserInfoToUserDetails(UserInfo userInfo) {
-    this.name = userInfo.getName();
-    this.password = userInfo.getPassword();
-    this.authorities = Arrays.stream(userInfo.getRoles().split(","))
+  public UserInfoUserDetails(UserInfo userInfo) {
+    name=userInfo.getName();
+    password=userInfo.getPassword();
+    authorities= Arrays.stream(userInfo.getRoles().split(","))
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
   }
