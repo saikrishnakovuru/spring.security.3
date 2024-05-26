@@ -1,9 +1,11 @@
 package com.spring.security3.config;
 
+import com.spring.security3.service.UserInfoUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,12 +36,15 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http.csrf().disable()
-            .authorizeHttpRequests()
-            .requestMatchers("/products/welcome", "/products/new").permitAll()
-            .and()
-            .authorizeHttpRequests().requestMatchers("/products/**")
-            .authenticated().and().formLogin().and().build();
+    return http.csrf(csrf -> csrf.disable())
+            // h2-console throws 403 without loading the content without the below line.
+            .headers(headers -> headers.frameOptions(options -> options.disable()))
+            .authorizeHttpRequests(auth ->
+                    auth.requestMatchers("/products/welcome", "/products/new", "/h2-console/**").permitAll()
+                            .requestMatchers("/products/**")
+                            .authenticated()
+            )
+            .httpBasic(Customizer.withDefaults()).build();
   }
 
   @Bean

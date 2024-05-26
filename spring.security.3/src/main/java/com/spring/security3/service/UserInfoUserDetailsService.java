@@ -1,5 +1,6 @@
-package com.spring.security3.config;
+package com.spring.security3.service;
 
+import com.spring.security3.config.ConvertUserInfoToUserDetails;
 import com.spring.security3.entity.UserInfo;
 import com.spring.security3.repository.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class UserInfoUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     Optional<UserInfo> userInfo = repository.findByName(username);
-    return userInfo.map(UserInfoUserDetails::new)
+    return userInfo.map(ConvertUserInfoToUserDetails::new)
             .orElseThrow(() -> new UsernameNotFoundException("user not found " + username));
 
   }
